@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+pandas
+polars[rtcompat]
+numpy
+beautifulsoup4
+selenium
+webdriver-manager
+plotly
+jinja2
+python-multipart

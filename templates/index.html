@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Scribe AI Agent | Zero-API Local Scraping</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --glass-bg: rgba(30, 41, 59, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --accent-cyan: #22d3ee;
+            --accent-indigo: #818cf8;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --sidebar-width: 320px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, rgba(34, 211, 238, 0.15) 0, transparent 50%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border-right: 1px solid var(--glass-border);
+            padding: 2.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-indigo), var(--accent-cyan));
+            border-radius: 8px;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(90deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .input-group-custom {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .input-group-custom label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        input.form-control-custom {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--glass-border);
+            padding: 0.85rem 1rem;
+            border-radius: 12px;
+            color: white;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input.form-control-custom:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.1);
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        .btn-premium {
+            background: linear-gradient(135deg, var(--accent-indigo), var(--accent-cyan));
+            color: white;
+            border: none;
+            padding: 0.9rem;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-premium:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(34, 211, 238, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .top-stats-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .top-stat-card {
+            flex: 1;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .top-stat-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(34, 211, 238, 0.3);
+        }
+
+        .top-stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-indigo), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .top-stat-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .card-custom {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .card-header-custom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-shrink: 0;
+        }
+
+        .card-header-custom h3 {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* Console styling */
+        .console {
+            background: rgba(2, 6, 23, 0.7);
+            border: 1px solid rgba(34, 211, 238, 0.1);
+            border-radius: 12px;
+            padding: 1.25rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            flex: 1;
+            overflow-y: auto;
+            color: #10b981;
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .console-line { 
+            display: flex;
+            gap: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 0.4rem;
+        }
+        
+        .console-line-arrow {
+            color: var(--accent-cyan);
+            flex-shrink: 0;
+            font-weight: bold;
+        }
+
+        .console-line-text {
+            word-break: break-all;
+        }
+
+        .data-viewer {
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .data-table-container {
+            background: rgba(15, 23, 42, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        th {
+            text-align: left;
+            padding: 0.75rem 0.5rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--glass-border);
+            font-weight: 600;
+        }
+
+        td {
+            padding: 0.75rem 0.5rem;
+            color: var(--text-primary);
+        }
+
+        /* Responsive Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
+
+        @media (max-width: 992px) {
+            body { flex-direction: column; overflow-y: auto; }
+            .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--glass-border); }
+            .main-content { height: auto; }
+            .top-stats-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo-container">
+            <div class="logo-icon"></div>
+            <div class="logo-text">SCRIBE AGENT</div>
+        </div>
+        
+        <div class="input-group-custom">
+            <label>Extraction Target</label>
+            <input type="text" id="url-input" class="form-control-custom" placeholder="Enter target URL..." value="https://news.ycombinator.com">
+        </div>
+
+        <div class="input-group-custom">
+            <label>Project Name (Optional)</label>
+            <input type="text" id="filename-input" class="form-control-custom" placeholder="e.g. tech_news_data">
+        </div>
+        
+        <button id="scribe-btn" class="btn-premium w-100">EXECUTE EXTRACTION</button>
+
+        <div class="card-custom mt-auto" style="padding: 1.25rem; height: auto;">
+            <h3 style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">Agent State</h3>
+            <div id="status-badge" style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--accent-cyan); font-weight: 600;">
+                ● Systems Idle
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <!-- Top Stats Section -->
+        <div class="top-stats-row">
+            <div class="top-stat-card">
+                <div class="top-stat-value" id="stat-tables-top">0</div>
+                <div class="top-stat-label">TABLES FOUND</div>
+            </div>
+            <div class="top-stat-card">
+                <div class="top-stat-value" id="stat-headers-top">0</div>
+                <div class="top-stat-label">CATEGORIES</div>
+            </div>
+            <div class="top-stat-card">
+                <div class="top-stat-value" id="stat-scrapes-top">0</div>
+                <div class="top-stat-label">LOCAL LOGS</div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Chart Section -->
+            <div class="col-lg-7">
+                <div class="card-custom" style="min-height: 400px;">
+                    <div class="card-header-custom">
+                        <h3>Data Distribution</h3>
+                    </div>
+                    <div id="chart-bar" style="width: 100%; height: 320px;"></div>
+                </div>
+            </div>
+            
+            <!-- Console Section -->
+            <div class="col-lg-5">
+                <div class="card-custom" style="min-height: 400px;">
+                    <div class="card-header-custom">
+                        <h3>Agent Intelligence Console</h3>
+                        <span class="badge bg-dark text-cyan small" style="border: 1px solid var(--accent-cyan); color: var(--accent-cyan);">RE-TIME</span>
+                    </div>
+                    <div class="console" id="console">
+                        <div class="console-line">
+                            <span class="console-line-arrow">➜</span>
+                            <span class="console-line-text">Awaiting instruction sequence...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Extraction Preview Row -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card-custom">
+                    <div class="card-header-custom">
+                        <div class="d-flex align-items-center gap-2">
+                            <h3>Structured Extraction Preview</h3>
+                            <span id="preview-no-data" class="text-secondary small ms-2" style="font-style: italic; opacity: 0.7;">No data extracted yet.</span>
+                        </div>
+                    </div>
+                    <div class="data-viewer" id="data-view">
+                        <div class="text-center py-5" id="data-placeholder">
+                            <p class="text-secondary">Start extraction to visualize structured results.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        const scribeBtn = document.getElementById('scribe-btn');
+        const urlInput = document.getElementById('url-input');
+        const filenameInput = document.getElementById('filename-input');
+        const consoleDiv = document.getElementById('console');
+        const statusBadge = document.getElementById('status-badge');
+        const previewNoData = document.getElementById('preview-no-data');
+
+        let logInterval = null;
+
+        async function updateDashboard() {
+            try {
+                const response = await fetch('/data');
+                const data = await response.json();
+                
+                if (data.history.length > 0) {
+                    const latest = data.history[data.history.length - 1];
+                    
+                    // Update Top Stats
+                    document.getElementById('stat-tables-top').innerText = latest.stats.tables_count;
+                    document.getElementById('stat-headers-top').innerText = latest.stats.headers_count;
+                    document.getElementById('stat-scrapes-top').innerText = data.history.length;
+
+                    // Update Charts
+                    const labels = ['Tables', 'Lists', 'Headers'];
+                    const values = [latest.stats.tables_count, latest.stats.lists_count, latest.stats.headers_count];
+                    
+                    const barData = [{
+                        x: labels,
+                        y: values,
+                        type: 'bar',
+                        marker: {
+                            color: ['rgba(129, 140, 248, 0.9)', 'rgba(34, 211, 238, 0.9)', 'rgba(16, 185, 129, 0.9)'],
+                            line: { color: 'rgba(255,255,255,0.1)', width: 1 }
+                        }
+                    }];
+
+                    const layout = {
+                        paper_bgcolor: 'rgba(0,0,0,0)',
+                        plot_bgcolor: 'rgba(0,0,0,0)',
+                        font: { color: '#94a3b8', family: 'Outfit' },
+                        margin: { t: 20, b: 40, l: 40, r: 20 },
+                        xaxis: { gridcolor: 'rgba(255,255,255,0.05)', zeroline: false },
+                        yaxis: { gridcolor: 'rgba(255,255,255,0.05)', zeroline: false }
+                    };
+
+                    Plotly.newPlot('chart-bar', barData, layout, {displayModeBar: false});
+
+                    // Update Data View
+                    const dataView = document.getElementById('data-view');
+                    
+                    if (latest.tables.length > 0 || latest.lists.length > 0) {
+                        dataView.innerHTML = '';
+                        previewNoData.style.display = 'none'; // Hide the "No data extracted yet" label
+                        
+                        if (latest.tables.length > 0) {
+                            latest.tables.forEach(table => {
+                                const container = document.createElement('div');
+                                container.className = 'data-table-container';
+                                container.innerHTML = `<h4 class="text-info mb-3 small" style="letter-spacing: 0.1em; font-weight: 700;">DATA BLOCK ${table.id}</h4>`;
+                                const tbl = document.createElement('table');
+                                const head = table.data[0];
+                                if (head) {
+                                    tbl.innerHTML = '<thead><tr>' + Object.keys(head).map(k => `<th>${k.toUpperCase()}</th>`).join('') + '</tr></thead>';
+                                    tbl.innerHTML += '<tbody>' + table.data.slice(0, 5).map(row => `<tr>${Object.values(row).map(v => `<td>${v}</td>`).join('')}</tr>`).join('') + '</tbody>';
+                                }
+                                container.appendChild(tbl);
+                                dataView.appendChild(container);
+                            });
+                        }
+                        
+                        if (latest.lists.length > 0) {
+                            const container = document.createElement('div');
+                            container.className = 'data-table-container';
+                            container.innerHTML = `<h4 class="text-info mb-3 small" style="letter-spacing: 0.1em; font-weight: 700;">EXTRACTED ITEMS (${latest.lists[0].items.length})</h4><ul class="list-unstyled text-secondary small">` + 
+                                latest.lists[0].items.slice(0, 5).map(i => `<li class="mb-1">● ${i}</li>`).join('') + '</ul>';
+                            dataView.appendChild(container);
+                        }
+                    } else {
+                        previewNoData.style.display = 'inline';
+                    }
+                }
+            } catch (err) {
+                console.error("Dashboard update failed", err);
+            }
+        }
+
+        async function fetchLogs() {
+            try {
+                const response = await fetch('/logs');
+                const data = await response.json();
+                
+                consoleDiv.innerHTML = data.logs.map(line => 
+                    `<div class="console-line"><span class="console-line-arrow">➜</span><span class="console-line-text">${line}</span></div>`
+                ).join('');
+                consoleDiv.scrollTop = consoleDiv.scrollHeight;
+
+                if (data.logs.some(line => line.includes("Task completed") || line.includes("CRITICAL ERROR"))) {
+                    clearInterval(logInterval);
+                    statusBadge.innerText = '● Systems Idle';
+                    statusBadge.style.color = 'var(--accent-cyan)';
+                    scribeBtn.disabled = false;
+                    scribeBtn.innerHTML = "EXECUTE EXTRACTION";
+                    updateDashboard();
+                }
+            } catch (err) {
+                console.error("Log fetch failed", err);
+            }
+        }
+
+        scribeBtn.addEventListener('click', async () => {
+            const url = urlInput.value;
+            const project_name = filenameInput.value;
+            if (!url) return;
+
+            scribeBtn.disabled = true;
+            scribeBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>PROCESSING...';
+            statusBadge.innerText = '● Agent Thinking...';
+            statusBadge.style.color = '#fbbf24';
+            consoleDiv.innerHTML = '<div class="console-line"><span class="console-line-arrow">➜</span><span class="console-line-text">Initializing high-reliability protocol...</span></div>';
+
+            try {
+                await fetch('/scribe', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({url, filename: project_name})
+                });
+
+                logInterval = setInterval(fetchLogs, 1000);
+            } catch (err) {
+                consoleDiv.innerHTML += `<div class="console-line"><span class="console-line-arrow">➜</span><span class="console-line-text">Failed to start: ${err.message}</span></div>`;
+                scribeBtn.disabled = false;
+                scribeBtn.innerHTML = "EXECUTE EXTRACTION";
+            }
+        });
+
+        // Initial load
+        updateDashboard();
+    </script>
+</body>
+</html>

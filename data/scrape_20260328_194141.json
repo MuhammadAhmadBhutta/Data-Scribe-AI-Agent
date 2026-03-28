@@ -1,0 +1,113 @@
+{
+    "status": "success",
+    "url": "https://en.wikipedia.org/wiki/History_of_books",
+    "timestamp": "2026-03-28 19:41:41",
+    "tables": [
+        {
+            "id": 0,
+            "data": [
+                {
+                    "0": null,
+                    "1": "This \"further reading\" section may need cleanup. Please read the editing guide and help improve the section. (August 2023) (Learn how and when to remove this message)"
+                }
+            ],
+            "columns": [
+                "0",
+                "1"
+            ]
+        },
+        {
+            "id": 1,
+            "data": [
+                {
+                    "hidevteBooks": "Production",
+                    "hidevteBooks.1": "Binding Covers dust jackets Design Editing Illustration Illuminated manuscripts Printing edition history incunabula instant book limited edition Publishing advance copy hardcover paperback Size Typesetting Volume (bibliography) Collection (publishing) Book series"
+                },
+                {
+                    "hidevteBooks": "Consumption",
+                    "hidevteBooks.1": "Awards Bestsellers list Bibliography Bibliomania (tsundoku) Bibliophilia Bibliotherapy Bookmarks Bookselling blurbs book towns history used Censorship Clubs Collecting Digitizing Bookworm (insect) Furniture bookcases bookends Library Print culture Reading literacy Reviews"
+                },
+                {
+                    "hidevteBooks": "By country",
+                    "hidevteBooks.1": "Brazil China France Germany Italy Japan Netherlands Pakistan Spain United Kingdom United States"
+                },
+                {
+                    "hidevteBooks": "Other",
+                    "hidevteBooks.1": "Genres non-fiction novel imaginary miniature pop-up textbook Grimoire Formats audiobooks Ebooks Folio Coffee table book"
+                },
+                {
+                    "hidevteBooks": "Related",
+                    "hidevteBooks.1": "Banned books Book burning incidents Nazi Book curses Book packaging Book swapping Book tour Conservation and restoration Dog ears History of books scroll codex Intellectual property ISBN Outline Preservation The Philobiblon World Book Day World Book Capital"
+                },
+                {
+                    "hidevteBooks": "Outline  Category  Portal",
+                    "hidevteBooks.1": "Outline  Category  Portal"
+                }
+            ],
+            "columns": [
+                "hidevteBooks",
+                "hidevteBooks.1"
+            ]
+        }
+    ],
+    "lists": [],
+    "headers": {
+        "h1": [
+            "History of books"
+        ],
+        "h2": [
+            "Contents",
+            "Clay tablets",
+            "South Asia",
+            "East Asia",
+            "Wax tablets",
+            "Papyrus",
+            "Pre-Columbian American codices",
+            "Parchment and paper",
+            "Middle Ages",
+            "The printing press",
+            "Modern era",
+            "Reading for the blind",
+            "Academic study",
+            "Gallery",
+            "See also",
+            "References",
+            "Further reading",
+            "External links"
+        ],
+        "h3": [
+            "Sumerian cuneiform",
+            "Early manuscripts",
+            "China",
+            "Japan",
+            "Mughal era",
+            "Florentine Codex",
+            "Parchment",
+            "Greece and Rome",
+            "Description",
+            "Book culture",
+            "Proliferation and conservation of books in Greece",
+            "Book production in Rome",
+            "Paper",
+            "Books in monasteries",
+            "Copying and conserving",
+            "The Scriptorium",
+            "Transformation from the literary edition in the 12th century",
+            "Introduction to printing",
+            "Late modern period",
+            "Contemporary period",
+            "E-books",
+            "Braille",
+            "Spoken books",
+            "Works cited",
+            "Books",
+            "Publishers' series",
+            "Periodicals"
+        ]
+    },
+    "stats": {
+        "tables_count": 2,
+        "lists_count": 0,
+        "headers_count": 46
+    }
+}
