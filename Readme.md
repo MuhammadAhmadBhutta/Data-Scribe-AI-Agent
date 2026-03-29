@@ -26,7 +26,7 @@
 ## 📦 Installation & Setup
 1.  **Clone the project** to your local machine:
     ```bash
-    git clone https://github.com/MuhammadAhmadBhutta/Data-Scribe-AI-Agent.git
+    git clone https://github.com/MuhammadAhmadBhutta/Data-Scribe-AI-Agent
     ```
 2.  **Navigate to the project directory**:
     ```bash
